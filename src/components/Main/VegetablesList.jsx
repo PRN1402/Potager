@@ -33,7 +33,7 @@ useEffect(()=>{
 
   
 function filterFriends(location){
-  getApi();
+  
   console.log("filterFriends location state");
    console.log(location.state);
 
