@@ -1,8 +1,7 @@
 function Home() {
-
+  localStorage.setItem("vegetables",JSON.stringify([]));
   return (
     <section id="home">
-        Bienvenue sur le site potager compatible
       
       
     </section>

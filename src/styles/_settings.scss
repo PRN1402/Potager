@@ -1,0 +1,86 @@
+@font-face {
+    font-family: "font-1";
+    src: url(../assets/fonts/Dongle-Regular.ttf);
+  }
+  @font-face {
+    font-family: "font-2";
+    src: url(../assets/fonts/Dongle-Light.ttf);
+  }
+  
+  $font-1: "font-1", sans-serif;
+  $font-2: "font-2", sans-serif;
+  
+  $color-1: #546fe4;
+  $color-2: #0e4a66;
+  $color-3: rgb(100, 100, 100);
+  $black: #060d2c;
+  $white: rgb(238, 238, 238);
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: $font-1;
+  }
+  
+  body {
+    background: $color-2;
+    color: $white;
+  }
+  li {
+    list-style: none;
+  }
+  .result {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .App {
+    text-align: center;
+    display:flex;
+    flex-direction:column;
+    min-height:100vh;
+  }
+  /***************** Header ***********************/
+  header{
+    height:100px;
+    background-color:rgb(132, 215, 233);
+    padding:5px;
+  }
+  header,ul{
+    display:flex;
+    flex-direction:row;
+    justify-content:space-around;
+  }
+  header .nav{
+    width:80%;
+    text-align:center;
+  }
+  header li{
+    list-style-type:none;
+    background:rgb(244, 248, 244);
+    color:#bbb;
+    font-weight: bold;
+    margin: 5px;
+    padding:10px;
+    width:70px;
+    border-radius:10px;
+  }
+  header li:hover{
+    cursor:pointer;
+    transform: scale(1.1);
+    transition:all 0.25s ease-in-out;
+  }
+
+/***************** footer ***********************/
+
+footer {
+  margin-top:auto;
+  display:flex;
+  justify-content : center;
+  align-items: center;
+  height: 60px;
+  background-color:rgb(132, 215, 233);
+  color:#fff;
+  padding:5px;
+}

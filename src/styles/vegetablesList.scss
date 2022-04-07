@@ -1,0 +1,59 @@
+.listeLegumes {
+    grid-area : listeLegume;
+        
+    }
+.parcelles {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    grid-template-areas:
+    "P1  P2  P3"
+    "P4  P5  P6"
+    "P7  P8  P9";
+           
+        }
+.vide {
+        grid-area : vide;
+            
+        }
+
+.container2 {
+display: grid;
+grid-template-columns: 200px 600px;
+grid-template-rows: repeat(3, 1fr);
+grid-template-areas:
+"vide listeLegume" 
+"vide listeLegume" 
+"parcelles listeLegume" 
+;
+
+    
+}
+
+.P0{             
+    grid-area : P5;
+}                               
+.P1{
+    grid-area : P2;
+}                 
+.P2{             
+    grid-area : P4;
+}                 
+.P3{             
+    grid-area : P6;
+}                 
+.P4{             
+    grid-area : P8;
+}                 
+.P5{             
+    grid-area : P1;
+}                 
+.P6{             
+    grid-area : P3;
+}                 
+.P7{             
+    grid-area : P7;
+}                 
+.P8{             
+    grid-area : P9;
+}    

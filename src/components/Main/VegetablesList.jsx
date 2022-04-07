@@ -1,98 +1,109 @@
-import  Axios  from 'axios';
-import React, {useEffect,useState} from 'react';
+import React, {useState} from 'react';
 import Vegetable from './Vegetable';
-import { Link, useParams, useLocation,useNavigate } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
+import {verifCompatible, triCoin,verifCoherenceListe,triAssociab} from  "../outils.mjs"
+
+//=======================
 function VegetableList() {
-  const [vegetablesList,setVegetablesList] = useState([]); 
+
+  let vegetablesList = [] 
   const [listePage,setListePage] = useState([]); 
  const [page, setPage] = useState(1);
-const [ pageNumber, setPageNumber ] = useState(1);
-// useEffect(   getApi(),[]);
- 
-useEffect(()=>{
-  Axios
-  .get('https://potager-compatible-api.herokuapp.com/api/vegetables')
-  .then((response) => response.data)
-  .then(data=>{
-    setVegetablesList(data);
-    setPageNumber(Math.ceil(data.length/8));
-    
-   
-  });
-  },[]);
+let pageNumber=1;
+
+let listLOCSTOR=[]
 
 
   const params=useParams();
-
-  console.log("vegatables list : params")
-  console.log(params)
-
   const location = useLocation();
-  console.log("vegetables list location state");
-  console.log(location.state);
 
   
-function filterFriends(location){
+function tri(){
+  let liste =JSON.parse(localStorage.getItem('listVegetables'))
+  vegetablesList=liste
+  verifCoherenceListe(liste)
+  pageNumber = (Math.ceil(liste.length/8));
   
-  console.log("filterFriends location state");
-   console.log(location.state);
-
-    const {id,name,endingHarvest,friendVegetables}=location.state;
-    console.log("friendVegetables");
-    console.log(friendVegetables);
-
-    console.log(vegetablesList);
-    console.log("vegetablesList");
-
-    const friendsListe=[];
-    // crée la liste des lég associés
-    friendVegetables.forEach((friend)=>{
-      console.log(friend);
-      console.log(vegetablesList.length);
-      for (let i=0;i<vegetablesList.length-1;i++){
-        console.log(vegetablesList[i].name);
-        if (vegetablesList[i].name===friend) friendsListe.push(vegetablesList[i]);
+  
+  if (listLOCSTOR&&listLOCSTOR.length > 4 &&listLOCSTOR.length < 8){
+    triCoin(listLOCSTOR,liste);
+   }
+    else{
+  
+  let tabComp=[]
+  
+  liste.forEach(element => {
+    verifCompatible(element,liste,tabComp)
+   });
+  let tbObjmostCompt=[]
+  //init de la liste des lég les plus associables 
+  liste.forEach(veg=>{
+    let objVeg={id:veg.id,name:veg.name, nb:0,moy:0}
+    tbObjmostCompt.push(objVeg)
+  })
+// pour chaque légume , on additionne les amis communs avec toutes les  liste d'amis des légumes ( les + favorables : au moins 3 amis trouvés)
+ tabComp.forEach(itm =>{
+   let obj=""
+   itm.tb.forEach(veg => {
+      obj=tbObjmostCompt.find(obj => obj.id===veg.id)
+      obj.nb+=veg.nb;
+    })
+ })
+//calcul de la moyenne d'associabilité pour chaque légume favorable (tabComp) avec des listes d'amis > 4 
+liste.forEach(veg=>{
+    veg.moy=0;
+  let obj= tbObjmostCompt.find(obj => obj.id===veg.id)
+     
+ 
+     if (veg.friendVegetables&& veg.friendVegetables.length>4){ 
+       obj.moy= obj.nb/veg.friendVegetables.length;
+       veg.moy=obj.moy
       }
+  } );
 
-});
+  //rempli si on vient de garden - il faut filtrer sur le ou les légumes centraux)
 
-console.log("friendsListe");
-console.log(friendsListe);
-setPageNumber(Math.ceil(friendsListe.length/8));
+  if (location.state){
+    let listTrav=[]
+    if (listLOCSTOR.length<3) {
+      listTrav=listLOCSTOR
+    }
+      if (listLOCSTOR.length===3) {
+      listTrav.push(listLOCSTOR[0])
+      listTrav.push(listLOCSTOR[1])
+    }
+    if (listLOCSTOR.length===4) {
+      listTrav.push(listLOCSTOR[0])
+      listTrav.push(listLOCSTOR[2])
+      listTrav.push(listLOCSTOR[3])
+    }  
 
-tri(friendsListe);
+    listTrav.forEach(leg=>{
+      leg.enemyVegetables.forEach(en=>{
+        let obj = liste.find(obj =>obj.name===en)
+        if (obj) obj.moy=-1
+      })
+    })
 
-return friendsListe
+    liste.forEach(leg=>{
+      leg.enemyVegetables.forEach(en=>{
+        let obj = listTrav.find(obj =>obj.name===en)
+        if (obj) leg.moy=-1
+      })
+    })
+  }
+
+// tri de la liste pour présenter les lég les plus associables en premier
+ triAssociab(liste)
 
 }
-function tri(liste){
-
-  let sorted=false;
-  let buff="";
-  while (!sorted) {
-    sorted=true;
-  for (let i=0; i<liste.length-2;i++){
-    let taille1=liste[i].friendVegetables.length;
-    let taille2=liste[i+1].friendVegetables.length;
-    if (taille1 < taille2){
-      sorted=false;
-      buff=liste[i];
-      liste[i]=liste[i+1];
-      liste[i+1] =buff;
-    }
-    // console.log(liste[i].friendVegetables.length);
-  }
-  };
-
 }  
+ const  getListePage = (page)=> {
 
- const  getListePage = (page,vegListe)=> {
     const listePage=[];
-    for(let i=(page-1)*8; i<(page-1)*8 +8 ; i++){
- //       console.log(vegetablesList[i]);
+    for(let i=(page-1)*8; i<page*8  ; i++){
         if(vegetablesList[i]) listePage.push(vegetablesList[i]);
       }
- //    console.log("listePage");
 
     return listePage;
 
@@ -100,10 +111,10 @@ function tri(liste){
   };
     
     function handlePageChange(value) {
-      setPage(value);
+    setPage(value);
     }
     
-    const pageButtons = Array(pageNumber)
+    const pageButtons = Array(5)
     .fill(0)
     .map((value, index) => (
         <button
@@ -114,14 +125,37 @@ function tri(liste){
           {index + 1}
         </button>
       ));
+      let parcelles=[]
+      listLOCSTOR= JSON.parse(localStorage.getItem('vegetables'));
 
-      
-    return (
-      <div className="App">
-        {tri(vegetablesList)}
+      if (listLOCSTOR){
+      for (let i=0;i<listLOCSTOR.length;i++){
         
+        listLOCSTOR[i].style="P"+i;
+      }
+    }
       
-      <h1>Liste des légumes</h1>
+    
+      parcelles= listLOCSTOR.map((veg)=> (
+        <div className={veg.style}>
+        <h3>{veg.name}</h3>
+      
+        </div>
+       
+        ))
+     
+    return (
+      <div className="container2">
+        <div className='parcelles'>
+        
+         {parcelles}
+        </div>
+
+      <div className='listeLegumes'>
+      {tri()}
+      
+      
+     <h2>Liste des légumes</h2>
       Page : { page }
       <div>
       <button disabled={page === 1} onClick={() => handlePageChange(page - 1)}>
@@ -129,6 +163,7 @@ function tri(liste){
       
 
       </button>
+      
       {pageButtons}
       <button
         disabled={page === pageNumber}
@@ -138,18 +173,16 @@ function tri(liste){
       </button>
       
       </div>
-          
-      <section>
-         { location.state ? getListePage(page,filterFriends(location)).map((veg, index) => {
+    
+    
+      <div>
+      { getListePage(page).map((veg, index) => {
             return <Vegetable veg={veg} key={index}/>
-          }) : getListePage(page,vegetablesList).map((veg, index) => {
-            return <Vegetable veg={veg} key={index}/>
-          })
-
+          }) 
          }
-      </section>
+      </div>
 
-      
+      </div>
     </div>
   );
 

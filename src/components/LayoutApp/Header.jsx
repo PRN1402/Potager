@@ -1,13 +1,13 @@
-import logo from './logo.svg';
+//import logo from './logo.svg';
 import { Link } from 'react-router-dom';
 
 
 function Header() {
-  console.log('Entrée Header');
+ // console.log('Entrée Header');
   return (
+    <div>
     <header>
 
-      <img src={logo} className="logo" alt="logo" />
       <nav className="nav">
         <ul>
           <li>
@@ -16,14 +16,12 @@ function Header() {
           <li>
             <Link to={'/vegetables-list'}>Liste des légumes</Link>
           </li>
-          <li>
-            <Link to={'/vegetable-garden'}>Mon potager</Link>
-          </li>
         </ul>
       </nav>
 
     </header>
-
+<h1>POTAGER COMPATIBLE</h1>
+</div>
   );
 }
 export default Header;  

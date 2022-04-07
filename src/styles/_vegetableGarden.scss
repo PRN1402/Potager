@@ -1,0 +1,47 @@
+    .P0{             
+        grid-area : P5;
+        border: 1px solid #fff; 
+    }                               
+    .P1{
+        grid-area : P2;
+        border: 1px solid #fff; 
+    }                 
+    .P2{             
+        grid-area : P4;
+        border: 1px solid #fff; 
+    }                 
+    .P3{             
+        grid-area : P6;
+        border: 1px solid #fff; 
+    }                 
+    .P4{             
+        grid-area : P8;
+        border: 1px solid #fff; 
+    }                 
+    .P5{             
+        grid-area : P1;
+        border: 1px solid #fff; 
+    }                 
+    .P6{             
+        grid-area : P3;
+        border: 1px solid #fff; 
+    }                 
+    .P7{             
+        grid-area : P7;
+        border: 1px solid #fff; 
+    }                 
+    .P8{             
+        grid-area : P9;
+        border: 1px solid #fff; 
+    }                 
+    
+    .container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+        grid-template-areas:
+        "P1  P2  P3"
+        "P4  P5  P6"
+        "P7  P8  P9";
+            
+        }

@@ -5,10 +5,8 @@ function Vegetable(veg){
   function handleNavigate(veg) {
     navigate('/vegetable-garden/parcelle/' + veg.id, { state: veg });
   }
-//console.log("Entrée Vegetable ")
-console.log(veg.veg);
 
-  const {id,name,endingHarvest,friendVegetables}=veg.veg;
+  const {id,name,endingHarvest,friendVegetables,enemyVegetables}=veg.veg;
   return(
       <div>
           <h2>{name}</h2>
@@ -16,6 +14,9 @@ console.log(veg.veg);
           <p>Amis 
           {(friendVegetables?.length) 
           ? friendVegetables.map(ami => { return <span> {ami}</span> }):""}</p> 
+          <p>Ennemis 
+          {(enemyVegetables?.length) 
+          ? enemyVegetables.map(ami => { return <span> {ami}</span> }):""}</p> 
           <button onClick={() => handleNavigate(veg.veg)}> Parcelle </button>
  
       </div>

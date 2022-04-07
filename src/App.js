@@ -1,5 +1,5 @@
-import './App.css';
-
+//import './App.css';
+import  Axios  from 'axios';
 
 import Header from './components/LayoutApp/Header';
 import Footer from './components/LayoutApp/Footer';
@@ -13,6 +13,18 @@ import React, {useEffect,useState} from 'react';
 
 function App() {
  
+  useEffect(()=>{
+    localStorage.setItem('listVegetables', JSON.stringify([]));
+    
+    Axios
+    .get('https://potager-compatible-api.herokuapp.com/api/vegetables')
+    .then((response) => response.data)
+    .then(data=>{
+      
+      localStorage.setItem('listVegetables', JSON.stringify(data));
+    });
+    },[]);
+  
   return (
     <div className='App'>
       <Router>
@@ -22,7 +34,6 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/vegetables-list" element={<VegetablesList />} />
             <Route path="/vegetables-list/parcelle/:veg" element={<VegetablesList />} />
-            <Route path="/vegetable-garden" element={<VegetableGarden />} />
             <Route path="/vegetable-garden/parcelle/:veg" element={<VegetableGarden />} />
 
           </Routes>
