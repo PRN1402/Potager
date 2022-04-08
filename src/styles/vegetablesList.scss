@@ -1,6 +1,7 @@
 .listeLegumes {
     grid-area : listeLegume;
-        
+    border: 1px solid #fff; 
+    justify-self: center;
     }
 .parcelles {
     display: grid;
@@ -19,14 +20,14 @@
 
 .container2 {
 display: grid;
-grid-template-columns: 200px 600px;
-grid-template-rows: repeat(3, 1fr);
+grid-template-rows: 350px 400px;
+grid-template-columns: repeat(3, 1fr);
 grid-template-areas:
-"vide listeLegume" 
-"vide listeLegume" 
 "parcelles listeLegume" 
+"vide listeLegume" 
+"vide listeLegume" 
 ;
-
+align-items: start;
     
 }
 

@@ -16,13 +16,13 @@ let listLOCSTOR=[]
 
   const params=useParams();
   const location = useLocation();
-
-  
+//===============================================================================
+//Fonction qui filtre la liste des légumes récupérée du local Storage (CF App.js)  
+//================================================================================
 function tri(){
   let liste =JSON.parse(localStorage.getItem('listVegetables'))
   vegetablesList=liste
   verifCoherenceListe(liste)
-  pageNumber = (Math.ceil(liste.length/8));
   
   
   if (listLOCSTOR&&listLOCSTOR.length > 4 &&listLOCSTOR.length < 8){
@@ -49,13 +49,13 @@ function tri(){
       obj.nb+=veg.nb;
     })
  })
-//calcul de la moyenne d'associabilité pour chaque légume favorable (tabComp) avec des listes d'amis > 4 
+//calcul de la moyenne d'associabilité pour chaque légume favorable (tabComp) avec des listes d'amis > 5 
 liste.forEach(veg=>{
     veg.moy=0;
   let obj= tbObjmostCompt.find(obj => obj.id===veg.id)
      
  
-     if (veg.friendVegetables&& veg.friendVegetables.length>4){ 
+     if (veg.friendVegetables&& veg.friendVegetables.length>5){ 
        obj.moy= obj.nb/veg.friendVegetables.length;
        veg.moy=obj.moy
       }
@@ -97,7 +97,10 @@ liste.forEach(veg=>{
  triAssociab(liste)
 
 }
-}  
+}
+let liste =JSON.parse(localStorage.getItem('listVegetables'))
+pageNumber = (Math.ceil(liste.length/8));
+
  const  getListePage = (page)=> {
 
     const listePage=[];
@@ -114,7 +117,7 @@ liste.forEach(veg=>{
     setPage(value);
     }
     
-    const pageButtons = Array(5)
+    const pageButtons = Array(pageNumber)
     .fill(0)
     .map((value, index) => (
         <button
@@ -125,24 +128,24 @@ liste.forEach(veg=>{
           {index + 1}
         </button>
       ));
-      let parcelles=[]
-      listLOCSTOR= JSON.parse(localStorage.getItem('vegetables'));
 
-      if (listLOCSTOR){
-      for (let i=0;i<listLOCSTOR.length;i++){
-        
-        listLOCSTOR[i].style="P"+i;
-      }
+    let parcelles=[]
+    listLOCSTOR= JSON.parse(localStorage.getItem('vegetables'));
+
+    if (listLOCSTOR){
+    for (let i=0;i<listLOCSTOR.length;i++){
+      
+      listLOCSTOR[i].style="P"+i;
+    }
     }
       
     
-      parcelles= listLOCSTOR.map((veg)=> (
-        <div className={veg.style}>
-        <h3>{veg.name}</h3>
-      
-        </div>
-       
-        ))
+    parcelles= listLOCSTOR.map((veg)=> (
+      <div className={veg.style}>
+      <h3>{veg.name}</h3>
+    
+      </div>
+    ))
      
     return (
       <div className="container2">
