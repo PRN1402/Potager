@@ -9,49 +9,42 @@ export function triCoin(tabLST,liste){
   
  //coins : stocke toutes les possibilités de coins
   let coins=[]
-      
-let listTrav=[]
-
-coins=rechCoin(tabLST,liste) 
-// tous les légumes favorables possibles pour les coins ss 2blons
-listTrav=creeListTrav(coins)
+ // tabTrav : définit les voisins de chaque coin     
+  let tabTrav=[
+    {id:"HG",i1:0,i2:1,i3:2},
+    {id:"HD",i1:0,i2:1,i3:3},
+    {id:"BG",i1:0,i2:2,i3:4},
+    {id:"BD",i1:0,i2:3,i3:4}
+  ]
+coins=rechCoin(tabLST,liste,tabTrav) 
 
 let coinsleg=[]
-let boucle =false
-// recherche d'un coin (rechLegCoin) et suppr du légume  des listes de travail (MajListTrav.. coins et lisTrav)  
-while (coins.length>0 && listTrav.length>0 && !boucle){
-  let taille1 =coins.length
-  let taille2 =listTrav.length
   
-  coinsleg=rechLegCoin(coins,listTrav,coinsleg)
+rechLegCoin(coins,coinsleg,tabLST)
 
-  if (coinsleg.length!==0){
-    majListTrav (coinsleg,coins,listTrav)
-  }
-  if (taille1 ===coins.length || taille2 === listTrav.length)
-    boucle =true
-}
-//si les coins ne sont pas tous remplis on cherche des légumes non défavorables
+//si les coins ne sont pas tous remplis application de filtres moins restrictifs 
 let myFriends=[]
 tabLST.forEach(veg => {
   let obj =liste.find(obj=> obj.id===veg.id)
   myFriends.push(obj)
 })
 
-let coinRempli = coinsleg.find(leg=>leg.idCoin==="HG")
+
+tabTrav.forEach(it=>{
+let coinRempli = coinsleg.find(leg=>leg.idCoin===it.id)
 
 if (!coinRempli){
   let trouve=false
   let i =0
-  while (i<myFriends[0].friendVegetables.length && !trouve){
-    let ami =myFriends[0].friendVegetables[i]
-    if  (!myFriends[1].enemyVegetables.includes(ami) && !myFriends[2].enemyVegetables.includes(ami)&&
-    (myFriends[1].friendVegetables.includes(ami) || myFriends[2].friendVegetables.includes(ami))
-    &&!(coinsleg.find(leg=>leg.ami===ami)))
+  while (i<myFriends[it.i1].friendVegetables.length && !trouve){
+    let ami =myFriends[it.i1].friendVegetables[i]
+    if  (!myFriends[it.i2].enemyVegetables.includes(ami) && !myFriends[it.i3].enemyVegetables.includes(ami)&&
+    (myFriends[it.i2].friendVegetables.includes(ami) || myFriends[it.i3].friendVegetables.includes(ami))
+     &&!(coinsleg.find(leg=>leg.ami===ami)))
      {
       trouve=true
       let obj={ 
-        idCoin:"HG",
+        idCoin:it.id,
         ami:ami}
         coinsleg.push(obj)
         break
@@ -60,164 +53,55 @@ if (!coinRempli){
         
 
   }
-  coinRempli = coinsleg.find(leg=>leg.idCoin==="HG")
+  coinRempli = coinsleg.find(leg=>leg.idCoin===it.id)
 if (!coinRempli){
   trouve=false
   i =0
 
-  while (i<myFriends[0].friendVegetables.length && !trouve){
-    let ami =myFriends[0].friendVegetables[i]
-    if  (!myFriends[1].enemyVegetables.includes(ami) && !myFriends[2].enemyVegetables.includes(ami)
+  while (i<myFriends[it.i1].friendVegetables.length && !trouve){
+    let ami =myFriends[it.i1].friendVegetables[i]
+    if  (!myFriends[it.i2].enemyVegetables.includes(ami) && !myFriends[it.i3].enemyVegetables.includes(ami)&&
+    (myFriends[it.i2].friendVegetables.includes(ami) || myFriends[it.i3].friendVegetables.includes(ami))
     )
      {
       trouve=true
       let obj={ 
-        idCoin:"HG",
+        idCoin:it.id,
         ami:ami}
         coinsleg.push(obj)
         break
       }
     i++  
   }
-}
-}
-
-coinRempli = coinsleg.find(leg=>leg.idCoin==="HD")
-
-if (!coinRempli){
-  let trouve=false
-  let i =0
-  while (i<myFriends[0].friendVegetables.length && !trouve){
-    let ami =myFriends[0].friendVegetables[i]
-    if  (!myFriends[1].enemyVegetables.includes(ami) && !myFriends[3].enemyVegetables.includes(ami)&&
-    (myFriends[1].friendVegetables.includes(ami) || myFriends[3].friendVegetables.includes(ami))
-    &&!(coinsleg.find(leg=>leg.ami===ami)))
-     {
-      trouve=true
-      let obj={ 
-        idCoin:"HD",
-        ami:ami}
-        coinsleg.push(obj)
-        break
-      }
-    i++  
-}
-coinRempli = coinsleg.find(leg=>leg.idCoin==="HD")
-if (!coinRempli){
-  trouve=false
-  i =0
-
-  while (i<myFriends[0].friendVegetables.length && !trouve){
-    let ami =myFriends[0].friendVegetables[i]
-    if  (!myFriends[1].enemyVegetables.includes(ami) && !myFriends[3].enemyVegetables.includes(ami)
-    )
-     {
-      trouve=true
-      let obj={ 
-        idCoin:"HD",
-        ami:ami}
-        coinsleg.push(obj)
-        break
-      }
-    i++  
+  coinRempli = coinsleg.find(leg=>leg.idCoin===it.id)
+  if (!coinRempli){
+    trouve=false
+    i =0
+  
+    while (i<myFriends[it.i1].friendVegetables.length && !trouve){
+      let ami =myFriends[it.i1].friendVegetables[i]
+      if  (!myFriends[it.i2].enemyVegetables.includes(ami) && !myFriends[it.i3].enemyVegetables.includes(ami)
+      )
+       {
+        trouve=true
+        let obj={ 
+          idCoin:it.id,
+          ami:ami}
+          coinsleg.push(obj)
+          break
+        }
+      i++  
+    }
   }
 }
 }
-
-coinRempli = coinsleg.find(leg=>leg.idCoin==="BG")
-
-if (!coinRempli){
-  let trouve=false
-  let i =0
-  while (i<myFriends[0].friendVegetables.length && !trouve){
-    let ami =myFriends[0].friendVegetables[i]
-    if  (!myFriends[2].enemyVegetables.includes(ami) && !myFriends[4].enemyVegetables.includes(ami)&&
-    (myFriends[2].friendVegetables.includes(ami) || myFriends[4].friendVegetables.includes(ami))
-    &&!(coinsleg.find(leg=>leg.ami===ami)))
-     {
-      trouve=true
-      let obj={ 
-        idCoin:"BG",
-        ami:ami}
-        coinsleg.push(obj)
-        break
-      }
-    i++  
-}
-coinRempli = coinsleg.find(leg=>leg.idCoin==="BG")
-trouve=false
-i =0
-
-if (!coinRempli){
-  trouve=false
-  i =0
-  while (i<myFriends[0].friendVegetables.length && !trouve){
-    let ami =myFriends[0].friendVegetables[i]
-    if  (!myFriends[2].enemyVegetables.includes(ami) && !myFriends[2].enemyVegetables.includes(ami)
-    )
-     {
-      trouve=true
-      let obj={ 
-        idCoin:"BG",
-        ami:ami}
-        coinsleg.push(obj)
-        break
-      }
-    i++  
-  }
-}
-}
-
-coinRempli = coinsleg.find(leg=>leg.idCoin==="BD")
-
-if (!coinRempli){
-  let trouve=false
-  let i =0
-  while (i<myFriends[0].friendVegetables.length && !trouve){
-    let ami =myFriends[0].friendVegetables[i]
-    if  (!myFriends[3].enemyVegetables.includes(ami) && !myFriends[4].enemyVegetables.includes(ami)&&
-    (myFriends[3].friendVegetables.includes(ami) || myFriends[4].friendVegetables.includes(ami))
-    &&!(coinsleg.find(leg=>leg.ami===ami)))
-     {
-      trouve=true
-      let obj={ 
-        idCoin:"BD",
-        ami:ami}
-        coinsleg.push(obj)
-        break
-      }
-    i++  
-}
-coinRempli = coinsleg.find(leg=>leg.idCoin==="BD")
-trouve=false
-i =0
-
-if (!coinRempli){
-  while (i<myFriends[0].friendVegetables.length && !trouve){
-    let ami =myFriends[0].friendVegetables[i]
-    if  (!myFriends[3].enemyVegetables.includes(ami) && !myFriends[4].enemyVegetables.includes(ami)
-    )
-     {
-      trouve=true
-      let obj={ 
-        idCoin:"BD",
-        ami:ami}
-        coinsleg.push(obj)
-        break
-      }
-    i++  
-  }
-}
-}
+})
 
 let tabAngle=[]
-tabAngle.push(coinsleg.find(obj=>obj.idCoin==="HG"));
-tabAngle.push(coinsleg.find(obj=>obj.idCoin==="HD"));
-tabAngle.push(coinsleg.find(obj=>obj.idCoin==="BG"));
-tabAngle.push(coinsleg.find(obj=>obj.idCoin==="BD"));
-
+tabTrav.forEach(it=>{
+  tabAngle.push(coinsleg.find(obj=>obj.idCoin===it.id));
+})
 coinsleg=tabAngle
-let myCoins=[]
 liste.forEach(leg => {leg.coin=""})
 //modif liste avec le champ coin pour permettre le tri
 liste.forEach(leg => {
@@ -245,7 +129,7 @@ localStorage.setItem('vegetables', JSON.stringify(tabCoin));
 //==============================================
 //rechercher les leg possibles pour chaque coin (favorables avec tous les légumes encadrant ce coin)
 //==============================================
-function rechCoin (listLOCSTOR,liste) {
+function rechCoin (listLOCSTOR,liste,tabTrav) {
   let coins=[]
   let myFriends=[]
   //pour ajouter les légumes amis à la liste des légumes des 5 parcelles (récupérée du local storage)
@@ -253,76 +137,35 @@ function rechCoin (listLOCSTOR,liste) {
     let obj =liste.find(obj=> obj.id===veg.id)
     myFriends.push(obj)
   })
-
+  tabTrav.forEach(it=>{
 //récup de tous les amis des légumes des 5  parcelles pour préparer la liste des candidats pour les coins (HG :Haut Gauche)  
-myFriends[0].friendVegetables.forEach(ami => {
-  if (myFriends[1].friendVegetables.includes(ami) && myFriends[2].friendVegetables.includes(ami))
+myFriends[it.i1].friendVegetables.forEach(ami => {
+    if (myFriends[it.i2].friendVegetables.includes(ami) && myFriends[it.i3].friendVegetables.includes(ami))
+  
   {
     let obj={ 
-      idCoin:"HG",
-      id1:myFriends[0].id,
-      id2:myFriends[1].id,
-      id3:myFriends[2].id,
+      idCoin:it.id,
+      id1:myFriends[it.i1].id,
+      id2:myFriends[it.i2].id,
+      id3:myFriends[it.i3].id,
       ami:ami}
       coins.push(obj)
   }  })
-      
-myFriends[0].friendVegetables.forEach(ami => {
-  if (myFriends[1].friendVegetables.includes(ami) && myFriends[3].friendVegetables.includes(ami))
-  {
-    let obj={ 
-      idCoin:"HD",
-      id1:myFriends[0].id,
-      id2:myFriends[1].id,
-      id3:myFriends[3].id,
-      ami:ami}
-      coins.push(obj)
-  }  })
-                
-myFriends[0].friendVegetables.forEach(ami => {
-  if (myFriends[2].friendVegetables.includes(ami) && myFriends[4].friendVegetables.includes(ami))
-  { 
-   let obj={ 
-      idCoin:"BG",
-      id1:myFriends[0].id,
-      id2:myFriends[2].id,
-      id3:myFriends[4].id,
-      ami:ami}
-      coins.push(obj)
-  }  })
-
-myFriends[0].friendVegetables.forEach(ami => {
-  if (myFriends[3].friendVegetables.includes(ami) && myFriends[4].friendVegetables.includes(ami))
-    {
-    let  obj={ 
-        idCoin:"BD",
-        id1:myFriends[0].id,
-        id2:myFriends[3].id,
-        id3:myFriends[4].id,
-        ami:ami}
-        coins.push(obj)
-      }  })
+})
             
    return coins     
         
 }
 
-//==========================================
-//pour éliminer les 2blons de légumes possibles pour les coins 
-function creeListTrav(coins){
-  let listTrav=[]
-listTrav.push(coins[0].ami)
-  coins.forEach(itm=> {
-    if (!listTrav.includes(itm.ami))listTrav.push(itm.ami)
 
-  })
-  return listTrav
-}
- 
  //==============
  export function verifCoherenceListe(liste){
 
- 
+    //let liste2=liste.filter(obj=>obj.id!==-1)
+    let obj=liste.find(obj=>obj.id===-1)
+    
+    
+    console.log(liste);
     liste.forEach(leg=>{
       leg.enemyVegetables.forEach(veg=>{
         let obj=liste.find(obj=>obj.name===veg)
@@ -364,12 +207,13 @@ listTrav.push(coins[0].ami)
       }
     })
   })
+  return liste
   }
   //=================================================================================================
 //pour chaque ami de item (un légume)  , vérifier la compatibilité des amis de chaque légume de la liste
 //=================================================================================================
 
-export function verifCompatible(item,liste,tabObjComp){
+export function verifCompatible(item,liste,tabObjComp,isFriend){
   let tabComp =[]
   
   liste.forEach((veg)=>{
@@ -388,6 +232,34 @@ export function verifCompatible(item,liste,tabObjComp){
   })
 let objComp={id:item.id,tb:tabComp}
 tabObjComp.push(objComp)
+
+let tbObjmostCompt=[]
+  //init de la liste des lég les plus associables 
+  liste.forEach(veg=>{
+    let objVeg={id:veg.id,name:veg.name, nb:0,moy:0}
+    tbObjmostCompt.push(objVeg)
+  })
+// pour chaque légume , on additionne les amis communs avec toutes les  liste d'amis des légumes ( les + favorables : au moins 3 amis trouvés)
+tabObjComp.forEach(itm =>{
+   let obj=""
+   itm.tb.forEach(veg => {
+      obj=tbObjmostCompt.find(obj => obj.id===veg.id)
+      obj.nb+=veg.nb;
+    })
+ })
+//calcul de la moyenne d'associabilité pour chaque légume favorable (tabComp) avec des listes d'amis > 5 
+liste.forEach(veg=>{
+    veg.moy=0;
+  let obj= tbObjmostCompt.find(obj => obj.id===veg.id)
+     
+ 
+     if (veg.friendVegetables&& veg.friendVegetables.length>7){ 
+       obj.moy= obj.nb/veg.friendVegetables.length;
+       veg.moy=obj.moy
+       if (isFriend)veg.moy+=100
+      }
+  } );
+
 }
 
 export function triAssociab(liste){
@@ -432,63 +304,92 @@ function triListeCoin(liste){
 };
 //==========================================
 //on remlit les coins   avec des lég présents 1 seule fois  
-function rechLegCoin(coins,listeTrav,coinsleg){
-  //==========================================
+function rechLegCoin(coins,coinsleg,tbLST){
+//==========================================
+let tabIdC=[{id:"HG",nb:0},{id:"HD",nb:0},{id:"BG",nb:0},{id:"BD",nb:0}]
+let tabLegCoin=[{leg:"",nb:0}]
+let listLegC=[]
+
+coins.forEach(itm=> {
+  if (!listLegC.includes(itm.ami))listLegC.push(itm.ami)
+})
+
+let nb =0
+//
+let idCoin=""
+let tbObj=[]
+tabIdC.forEach(it=>{
+  tbObj=coins.filter(o=>o.idCoin===it.id)
+  it.nb=tbObj.length
+})
+listLegC.forEach(it=>{
+  tbObj=coins.filter(o=>o.ami===it)
   
-  let i=0
-  let nb=0
-  let ami=""
-  let idc=""
+  let obj={leg:it, nb:tbObj.length}
+  tabLegCoin.push(obj)
+})
+let trouv =true
+let tabRetour=[]
+while (tabIdC.length>0 && coinsleg.length<4 && trouv){
+  tbObj=tabIdC.find( x=> x.nb===1)
+  if (tbObj){
+  idCoin=tbObj.id
+  tbObj=coins.find(y=>y.idCoin===idCoin)
+  coinsleg.push(tbObj)
+  tabRetour=majListTrav(coinsleg,coins,tabIdC,tabLegCoin)
+  coinsleg=tabRetour[0]
+  coins=tabRetour[1]
+  tabIdC=tabRetour[2]
+  tabLegCoin=tabRetour[3]
+
+}else {
+  tbObj=tabLegCoin.find(o=>o.nb===1)
+  if (tbObj){ 
+    let obj=tbObj
+    tbObj=coins.find(o=>o.ami===obj.leg)
+    coinsleg.push(tbObj)
+    tabRetour=majListTrav(coinsleg,coins,tabIdC,tabLegCoin)
+    coinsleg=tabRetour[0]
+    coins=tabRetour[1]
+    tabIdC=tabRetour[2]
+    tabLegCoin=tabRetour[3]
+    
   
-    while (i<=listeTrav.length) 
-    {
-      nb=0
-      ami=""
-      idc=""
-    coins.forEach(coin => {if (coin.ami===listeTrav[i] )
-      { 
-        nb++
-        ami=coin.ami
-        idc=coin.idCoin
-        }
-  })
-      
-      if (nb===1 ||listeTrav.length ===1) {
-       
-        let obj={idCoin:idc,ami:ami}
-        
-        coinsleg.push(obj )
-        break
-      }
-      i++
-  }
-  return coinsleg
-  }
+  }else trouv=false
+}
+}
+
+
+
+
+
+ }
   
   
-  export function majListTrav(coinsleg,coins,listeTrav){
+ function majListTrav(coinsleg,coins,tabIdC,tabLegCoin){
 
   
   
   //on retire les légumes sélectionnés : le dernier ajouté dans la liste coinsleg (cf rechLegCoin)
    let param=coinsleg[coinsleg.length-1].ami
    
-   coins.filter(leg=>leg.ami!==param)
+   coins=coins.filter(leg=>leg.ami!==param)
   
-  
+   tabLegCoin=tabLegCoin.filter(c=>c.leg!==param)
   //on retire les légumes sélectionnés : le dernier ajouté dans la liste coinsleg (cf rechLegCoin)
     param=coinsleg[coinsleg.length-1].idCoin
     
-    coins.filter(leg=>leg.idCoin!==param)
+   coins= coins.filter(leg=>leg.idCoin!==param)
+   tabIdC=tabIdC.filter(c=>c.id!==param)
    
+   console.log("coins");
+   console.log(coins);
    
-  //on retire les légumes sélectionnés : le dernier ajouté dans la liste coinsleg (cf rechLegCoin)
-  //==========================================
-    param=coinsleg[coinsleg.length-1].ami
-    
-     listeTrav.filter(leg=>leg!==param)
-   
+  let tabTab=[]
+  tabTab.push(coinsleg)
+  tabTab.push(coins)
+  tabTab.push(tabIdC)
+  tabTab.push(tabLegCoin)
   
+  return tabTab
 }
-
-

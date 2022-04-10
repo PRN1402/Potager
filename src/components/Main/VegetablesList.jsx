@@ -31,39 +31,26 @@ function tri(){
     else{
   
   let tabComp=[]
-  
-  liste.forEach(element => {
-    verifCompatible(element,liste,tabComp)
-   });
-  let tbObjmostCompt=[]
-  //init de la liste des lég les plus associables 
-  liste.forEach(veg=>{
-    let objVeg={id:veg.id,name:veg.name, nb:0,moy:0}
-    tbObjmostCompt.push(objVeg)
-  })
-// pour chaque légume , on additionne les amis communs avec toutes les  liste d'amis des légumes ( les + favorables : au moins 3 amis trouvés)
- tabComp.forEach(itm =>{
-   let obj=""
-   itm.tb.forEach(veg => {
-      obj=tbObjmostCompt.find(obj => obj.id===veg.id)
-      obj.nb+=veg.nb;
-    })
- })
-//calcul de la moyenne d'associabilité pour chaque légume favorable (tabComp) avec des listes d'amis > 5 
-liste.forEach(veg=>{
-    veg.moy=0;
-  let obj= tbObjmostCompt.find(obj => obj.id===veg.id)
-     
- 
-     if (veg.friendVegetables&& veg.friendVegetables.length>5){ 
-       obj.moy= obj.nb/veg.friendVegetables.length;
-       veg.moy=obj.moy
-      }
-  } );
+  //recherche des meilleurs amis du ou des lég déjà choisis pour les parcelles, avant de traiter le reste de la liste
 
+  if (listLOCSTOR){
+    let listFriends=[]
+    listLOCSTOR.forEach(it=>{
+      verifCompatible(it,liste,tabComp,true)      
+    })
+
+  }
+
+  liste.forEach(element => {
+    if (!listLOCSTOR.find(it => it.name===element.name))
+    verifCompatible(element,liste,tabComp,false)
+   });
+  
   //rempli si on vient de garden - il faut filtrer sur le ou les légumes centraux)
 
-  if (location.state){
+
+
+  if (listLOCSTOR){
     let listTrav=[]
     if (listLOCSTOR.length<3) {
       listTrav=listLOCSTOR
@@ -98,8 +85,6 @@ liste.forEach(veg=>{
 
 }
 }
-let liste =JSON.parse(localStorage.getItem('listVegetables'))
-pageNumber = (Math.ceil(liste.length/8));
 
  const  getListePage = (page)=> {
 
@@ -117,7 +102,7 @@ pageNumber = (Math.ceil(liste.length/8));
     setPage(value);
     }
     
-    const pageButtons = Array(pageNumber)
+    const pageButtons = Array(5)
     .fill(0)
     .map((value, index) => (
         <button
