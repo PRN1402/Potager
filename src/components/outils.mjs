@@ -370,17 +370,32 @@ while (tabIdC.length>0 && coinsleg.length<4 && trouv){
 
   
   
-  //on retire les légumes sélectionnés : le dernier ajouté dans la liste coinsleg (cf rechLegCoin)
-   let param=coinsleg[coinsleg.length-1].ami
-   
-   coins=coins.filter(leg=>leg.ami!==param)
+//on retire les légumes sélectionnés : le dernier ajouté dans la liste coinsleg (cf rechLegCoin)
+  let param=coinsleg[coinsleg.length-1].ami
   
-   tabLegCoin=tabLegCoin.filter(c=>c.leg!==param)
-  //on retire les légumes sélectionnés : le dernier ajouté dans la liste coinsleg (cf rechLegCoin)
-    param=coinsleg[coinsleg.length-1].idCoin
+  coins=coins.filter(leg=>leg.ami!==param)
+
+  tabLegCoin=tabLegCoin.filter(c=>c.leg!==param)
+//on retire les légumes sélectionnés : le dernier ajouté dans la liste coinsleg (cf rechLegCoin)
+  param=coinsleg[coinsleg.length-1].idCoin
+  
+  coins= coins.filter(leg=>leg.idCoin!==param)
+  tabIdC=tabIdC.filter(c=>c.id!==param)
+
+  let newTb = [];
+  let tb=[]
+  let nb = 0;
+  tabIdC.forEach((ta) => {
+    tb = coins.filter((o) => o.idCoin === ta.id);
+    if (tb.length){
     
-   coins= coins.filter(leg=>leg.idCoin!==param)
-   tabIdC=tabIdC.filter(c=>c.id!==param)
+      newTb.push({ id: ta.id, nb: tb.length });
+    }
+
+  });
+
+  tabIdC=newTb
+
    
    console.log("coins");
    console.log(coins);
